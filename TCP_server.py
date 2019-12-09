@@ -201,12 +201,43 @@ def do_register():
     account = request.form.get("account")
     nickname = request.form.get("nickname")
     passwd = request.form.get("passwd")
-    user = User(aaccount_id=account,password=passwd,nickname=nickname)
+    answer1 = request.form.get("answer1")
+    answer2 = request.form.get("answer2")
+    user = User(aaccount_id=account,password=passwd,nickname=nickname,answer1=answer1,answer2=answer2)
     result = db.insert_user_into_user_table(user)
     if result:
         return render_template("register_succed.html",nickname=nickname)
     else:
         return render_template("register_failed.html")
+
+@app.route("/findpwd1")
+def findpwd1():
+    return render_template("refind_pwd_account.html")
+
+@app.route("/do_find_pwd",methods=["post"])
+def do_find_pwd():
+    account = request.form.get("account")
+    answer1 = request.form.get("answer1")
+    answer2 = request.form.get("answer2")
+    user_temp = db.find_all_info_by_account(account)
+    if user_temp == False:
+        return render_template("refind_pwd_failed.html")
+    else:
+        if answer1 == user_temp.answer1 and answer2 == user_temp.answer2:
+            return render_template("refind_pwd_new_pwd.html",account=account)
+        else:
+            return render_template("refind_pwd_failed.html")
+
+@app.route("/do_new_pwd",methods=["post"])
+def do_new_pwd():
+    account = request.form.get("account")
+    passwd = request.form.get("pwd")
+    result = db.update_user_passwd(account,passwd)
+    if result:
+        return render_template("refind_pwd_succed.html")
+    else:
+        return render_template("refind_pwd_failed.html")
+
 
 def main():
 
@@ -242,6 +273,6 @@ if __name__ == '__main__':
     if pid < 0:
         os._exit(0)
     elif pid == 0:
-        app.run()
+        app.run(host="176.215.133.105")
     else:
         main()

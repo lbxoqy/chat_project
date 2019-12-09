@@ -74,12 +74,24 @@ class DataBaseCRUD:
         :return: True插入成功 False插入失败
         """
 
-        sql = "insert into user_table(account_id,nickname,password) values(%s,%s,%s);"
-        arg_list = [user.account_id,user.nickname,user.password]
+        sql = "insert into user_table(account_id,nickname,password,answer1,answer2) values(%s,%s,%s,%s,%s);"
+        arg_list = [user.account_id,user.nickname,user.password,user.answer1,user.answer2]
         try:
             self.cur.execute(sql, arg_list)
             self.db.commit()
         except:
+            self.db.rollback()
+            return False
+        else:
+            return True
+
+    def update_user_passwd(self,account,passwd):
+        sql = "update user_table set password=%s where account_id=%s;"
+        arg_list=[passwd,account]
+        try:
+            self.cur.execute(sql, arg_list)
+            self.db.commit()
+        except Exception:
             self.db.rollback()
             return False
         else:

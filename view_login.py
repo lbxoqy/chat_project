@@ -125,10 +125,10 @@ class ViewLogin(Widget):
             self.login_failed.setHidden(False)
 
     def register(self):
-        webbrowser.open("html/register.html")
+        webbrowser.open("http://176.215.133.105:5000/")
 
     def retrieve(self):
-        webbrowser.open("http://www.fcww12.com")
+        webbrowser.open("http://176.215.133.105:5000/")
 
     def eventFilter(self, object, event):
         if object == self.close_button:
