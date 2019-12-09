@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>注册页面</title>
+	<style>
+		.div{
+			position: relative;
+			left:700px;
+			top: 200px;
+		}
+	</style>
+	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<div class="div">
+<form action="/do_register" accept-charset="UTF-8" method="post"  enctype="multipart/form-data">
+	账&ensp;&ensp;&ensp;&ensp;号:&ensp;<input  type="text" name="account"><br>
+	昵&ensp;&ensp;&ensp;&ensp;称:&ensp;<input type="text" name="nickname"><br>
+	密&ensp;&ensp;&ensp;&ensp;码:&ensp;<input id="pwd1" type="password" name="passwd"><br>
+	确认密码:&ensp;<input id="pwd2" type="password"><test id="div1"></test><br>
+	<input id="submit" type="submit" value="注册" >
+</form>
+</div>
+<script>
+	var pwd1 =document.getElementById("pwd1");
+	var pwd2 =document.getElementById("pwd2");
+	pwd2.onchange = function () {
+		if (pwd1.value!=pwd2.value){
+		    document.getElementById("div1").innerHTML="两次输入的不一样";
+		}
+    }
+</script>
+</body>
+</html>
