@@ -59,7 +59,7 @@ def do_login(connfd, list_data):  # list_data = ["LOGIN","account passwd"]
             for acco, connfd1 in online_user_connfd_dict.items():
                 message = "FRIEND_ONLINE %s" % account
                 connfd1.send(message.encode())
-                sleep(0.2)
+                sleep(0.3)
             online_user_connfd_dict[account] = connfd
 
         else:
@@ -97,7 +97,7 @@ def do_exit(list_data):
         for acco, connfd1 in online_user_connfd_dict.items():
             message = "FRIEND_ONLINE %s" % account
             connfd1.send(message.encode())
-            sleep(0.2)
+            sleep(0.3)
     except:
         print("删除online_user失败")
 
@@ -186,10 +186,19 @@ def handle(connfd):
                 self_account = list_account[0]
                 friend_account = list_account[1]
                 db.add_friend(self_account,friend_account)
-                for acco, connfd1 in online_user_connfd_dict.items():
-                    message = "FLUSH_FRIEND_LIST "
-                    connfd1.send(message.encode())
-                    sleep(0.2)
+                try:
+                    for acco, connfd1 in online_user_connfd_dict.items():
+                        if acco == self_account:
+                            message = "FRIEND_ONLINE %s" % friend_account
+                            connfd1.send(message.encode())
+                            sleep(0.2)
+                        elif acco == friend_account:
+                            message = "FRIEND_ONLINE %s" % friend_account
+                            connfd1.send(message.encode())
+                            sleep(0.2)
+                except:
+                    print("删除online_user失败")
+
 
 
         except:
@@ -218,7 +227,7 @@ def update_user_info(list_data):
     for acco, connfd1 in online_user_connfd_dict.items():
         message = "FLUSH_USER_INFO %s"
         connfd1.send(message.encode())
-        sleep(0.2)
+        sleep(0.3)
 
 
 def upload_head_img(connfd, list_data):

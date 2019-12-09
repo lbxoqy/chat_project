@@ -115,7 +115,7 @@ def upload_head_img(filepath, img_name):
     filesize = str(os.path.getsize(filepath))
     msg = filesize
     sockfd.send(msg.encode())
-    sleep(0.1)
+    sleep(0.3)
     for line in fr:
         sockfd.send(line)
     fr.close()
@@ -184,23 +184,3 @@ def send_chat(account, friend_account, text):
     """
     message = "SEND_CHAT %s %s %s" % (account, friend_account, text)
     sockfd.send(message.encode())
-
-# def recv_message(account):
-#     message = "RECV_MESSAGE %s"%account
-#     sockfd.send(message.encode())
-#     json_list_message = sockfd.recv(1024)
-#     list_message = json.loads(json_list_message) #list_message = ["text1","text2"...]
-#     return list_message
-
-# def recv_message_ok(account):
-#     message = "RECV_MESSAGE_OK %s" % account
-#     sockfd.send(message.encode())
-#
-# def is_flush_message(account):
-#     message = "IS_FLUSH_MESSAGE %s" % account
-#     sockfd.send(message.encode())
-#     msg = sockfd.recv(1024)
-#     if msg.decode()=="FLUSH_MESSAGE":
-#         return True
-#     else:
-#         return False

@@ -229,8 +229,8 @@ class Ui_ViewMain(Widget):
                 self.search_window.pushButton_agree.show()
                 self.search_window.search_account = request_add_account
                 self.lable_message.show()
-            elif list_data[0] == "FLUSH_FRIEND_LIST":
-                self.do_friend_online(list_data)
+            # elif list_data[0] == "FLUSH_FRIEND_LIST":
+            #     self.do_friend_online(list_data)
 
     def search_result(self,msg):
         self.search_nickname_signal.emit(msg)
