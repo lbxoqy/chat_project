@@ -8,7 +8,7 @@ from model_user import User
 from time import sleep
 
 sockfd = socket()  # 默认参数就是tcp
-server_addr = ('127.0.0.1', 8888)
+server_addr = ('176.215.133.105', 8888)
 
 
 def connect_server():
