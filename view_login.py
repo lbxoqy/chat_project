@@ -97,7 +97,7 @@ class ViewLogin(Widget):
         self.resize(650, 350)
         self.setWindowTitle("hahah")
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setWindowIcon(QIcon("res/login/xzmly.jpeg"))
+        self.setWindowIcon(QIcon("res/main/logo.png"))
 
 
     def center(self):

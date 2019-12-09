@@ -53,6 +53,8 @@ class Ui_ViewChat(Widget):
         # 头像按钮
         self.pushButton_3 = QtWidgets.QPushButton(self.frame)
         self.pushButton_3.setGeometry(QtCore.QRect(20, 7, 50, 50))
+        if self.user_friend.img == None or self.user_friend.img =="":
+            self.user_friend.img = "logo.png"
         self.pushButton_3.setStyleSheet("border-image: url(res/client_head_image/%s);"%self.user_friend.img)
         self.pushButton_3.setText("")
         self.pushButton_3.setObjectName("pushButton_3")

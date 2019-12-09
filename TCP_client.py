@@ -88,13 +88,14 @@ def download_head_img_by_account(img):
         sockfd.send(b"ok")
         while receive_size < file_total_size:
             data = sockfd.recv(1024)
-            receive_size+=len(data)
+            receive_size += len(data)
             fw.write(data)
             fw.flush()
         fw.close()
 
-def upload_head_img(filepath,img_name):
-    message = "UPLOAD_HEAD_IMG %s"%img_name
+
+def upload_head_img(filepath, img_name):
+    message = "UPLOAD_HEAD_IMG %s" % img_name
     sockfd.send(message.encode())
     try:
         fr = open(filepath, "rb")
@@ -108,18 +109,26 @@ def upload_head_img(filepath,img_name):
         sockfd.send(line)
     fr.close()
 
-def send_img(send_account,recv_account,filepath):
+
+def update_user_info(account_id, img, nickname, sex):
+    print("TCP_client,sssssssssssssssss")
+    message = "UPDATE_USER_INFO %s %s %s %s" %(account_id,img,nickname,sex)
+    sockfd.send(message.encode())
+
+
+def send_img(send_account, recv_account, filepath):
     file_name = filepath.split("/")[-1]
     try:
         fr = open(filepath, "rb")
         filesize = str(os.path.getsize(filepath))
-        msg = "SEND_IMG %s %s %s %s"%(file_name,filesize,recv_account,send_account)
+        msg = "SEND_IMG %s %s %s %s" % (file_name, filesize, recv_account, send_account)
         sockfd.send(msg.encode())
         for line in fr:
             sockfd.send(line)
         fr.close()
     except:
         print("打开图片失败")
+
 
 def find_all_friends(account):
     """
@@ -144,7 +153,6 @@ def find_all_friends(account):
         return list_friends
 
 
-
 def exit(account):
     """
     退出操作
@@ -154,7 +162,8 @@ def exit(account):
     message = "EXIT %s" % account
     sockfd.send(message.encode())
 
-def send_chat(account,friend_account,text):
+
+def send_chat(account, friend_account, text):
     """
     发送聊天消息
     :param account:
@@ -162,7 +171,7 @@ def send_chat(account,friend_account,text):
     :param text:
     :return:
     """
-    message = "SEND_CHAT %s %s %s"%(account,friend_account,text)
+    message = "SEND_CHAT %s %s %s" % (account, friend_account, text)
     sockfd.send(message.encode())
 
 # def recv_message(account):

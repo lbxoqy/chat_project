@@ -147,6 +147,7 @@ def handle(connfd):
     while True:
         try:
             data = connfd.recv(1024 * 1024)  # "关键字 后续内容"
+            print(data.decode())
 
             if not data:
                 break
@@ -168,22 +169,37 @@ def handle(connfd):
             elif list_data[0] == "SEND_IMG":  # list_data = ['SEND_IMG', 'file_name size recv_account send_account']
                 send_img(connfd, list_data)
             elif list_data[0] == "UPLOAD_HEAD_IMG":
-                img_name = list_data[1]
-                filepath = "res/server_head_image/%s" % img_name
-                fw = open(filepath, "wb")
-                msg = connfd.recv(1024)
-                file_total_size = int(msg.decode())
-                receive_size = 0
-                while receive_size < file_total_size:
-                    data = connfd.recv(1024)
-                    receive_size += len(data)
-                    fw.write(data)
-                    fw.flush()
-                fw.close()
+                upload_head_img(connfd, list_data)
+            elif list_data[0] == "UPDATE_USER_INFO":
+                info_list = list_data[1].split(" ",3)
+                account = info_list[0]
+                img = info_list[1]
+                nickname = info_list[2]
+                sex = info_list[3]
+                result = db.update_user_info(account,img,nickname,sex)
+                for acco, connfd1 in online_user_connfd_dict.items():
+                    message = "FLUSH_USER_INFO %s"
+                    connfd1.send(message.encode())
+                    sleep(0.2)
 
 
         except:
-            continue
+            print("接收消息出错")
+
+
+def upload_head_img(connfd, list_data):
+    img_name = list_data[1]
+    filepath = "res/server_head_image/%s" % img_name
+    fw = open(filepath, "wb")
+    msg = connfd.recv(1024)
+    file_total_size = int(msg.decode())
+    receive_size = 0
+    while receive_size < file_total_size:
+        data = connfd.recv(1024)
+        receive_size += len(data)
+        fw.write(data)
+        fw.flush()
+    fw.close()
 
 
 app = Flask(__name__)
@@ -269,10 +285,13 @@ def main():
 
 
 if __name__ == '__main__':
-    pid = os.fork()
-    if pid < 0:
-        os._exit(0)
-    elif pid == 0:
-        app.run(host="176.215.133.105")
-    else:
-        main()
+    try:
+        pid = os.fork()
+        if pid < 0:
+            os._exit(0)
+        elif pid == 0:
+            app.run(host="176.215.133.105")
+        else:
+            main()
+    except:
+        print("退出")

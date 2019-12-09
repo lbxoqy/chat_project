@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QApplication
 from TCP_client import *
 from model_user import User
 from view_friend_list import ViewFriendList
+from view_user_info import Ui_ViewUserInfo
 from view_widget import Widget
 from multiprocessing import Process
 
@@ -25,6 +26,7 @@ class Ui_ViewMain(Widget):
         self.sockfd =sockfd
         self.user = find_all_info_by_account(account)
         self.friend_list = find_all_friends(account)
+        self.user_info_window = Ui_ViewUserInfo(self.user)
         self.setupUi()
 
     def setupUi(self):
@@ -78,8 +80,8 @@ class Ui_ViewMain(Widget):
 
         self.pushButton_head.setText("")
         self.pushButton_head.setObjectName("pushButton_head")
-        if self.user.img == None:
-            self.user.img = "椭圆 1 拷贝.png"
+        if self.user.img == None or self.user.img == "":
+            self.user.img = "logo.png"
         filepath = "res/client_head_image/%s" % self.user.img
         is_exist = os.path.exists(filepath)
         if is_exist == False:
@@ -87,6 +89,8 @@ class Ui_ViewMain(Widget):
             self.pushButton_head.setStyleSheet("border-image: url(res/client_head_image/%s);"% self.user.img)
         else:
             self.pushButton_head.setStyleSheet("border-image: url(res/client_head_image/%s);" % self.user.img)
+        self.pushButton_head.clicked.connect(self.open_info_window)
+
         # 昵称文字
         self.label_nickname = QtWidgets.QLabel(self.frame_2)
         self.label_nickname.setGeometry(QtCore.QRect(70, 35, 131, 20))
@@ -178,6 +182,9 @@ class Ui_ViewMain(Widget):
         # self.process.daemon = True
         # self.process.start()
 
+    def open_info_window(self):
+        self.user_info_window.show()
+
     def recv_message(self):
         print("开始了接收消息的子进程")
         while True:
@@ -188,30 +195,27 @@ class Ui_ViewMain(Widget):
             list_data = data.split(" ", 1)
             if list_data[0] == "FRIEND_ONLINE":
                 self.do_friend_online(list_data)
-                # account = list_data[1]
-                # message = "FIND_ALL_FRIENDS %s" % self.user.account_id
-                # try:
-                #     self.sockfd.send(message.encode())  # 发送字节串
-                # except:
-                #     return "CONNECT_FAILED"
-                # try:
-                #     msg_json = sockfd.recv(1024 * 1204)
-                #     list_friend_account = json.loads(msg_json.decode())
-                #     list_friends = []
-                #     if list_friend_account == False:
-                #         return list_friends
-                #     else:
-                #         for account in list_friend_account:
-                #             user = find_all_info_by_account(account)
-                #             list_friends.append(user)
-                #     self.friend_list = list_friends
-                # except:
-                #     print("好友上线获取失败")
-                # self.flush_friend_list()
             elif list_data[0]== "CHAT":    # list_data = ['CHAT', 'admin admin1 李行 2019-12-02-13:09:28: 111111']
                 self.do_chat(list_data)
             elif list_data[0]=="SEND_CHAT_IMG": # list_data = ['SEND_CHAT_IMG', 'filesize file_name recv_account send_account']
                 data = self.do_send_chat_img(data, list_data)
+            elif list_data[0] == "FLUSH_USER_INFO":
+                self.do_flush_user_info()
+
+
+    def do_flush_user_info(self):
+        self.user = find_all_info_by_account(self.user.account_id)
+        if self.user.img == None or self.user.img == "":
+            self.user.img = "logo.png"
+        filepath = "res/client_head_image/%s" % self.user.img
+        is_exist = os.path.exists(filepath)
+        if is_exist == False:
+            download_head_img_by_account(self.user.img)
+            self.pushButton_head.setStyleSheet("border-image: url(res/client_head_image/%s);" % self.user.img)
+        else:
+            self.pushButton_head.setStyleSheet("border-image: url(res/client_head_image/%s);" % self.user.img)
+        self.label_nickname.setText(self.user.nickname)
+
 
     def do_friend_online(self,list_data):
         account = list_data[1]

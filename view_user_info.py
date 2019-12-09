@@ -1,11 +1,10 @@
-
-
+import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QFileDialog
 import sys
 
-from TCP_client import upload_head_img, connect_server
+from TCP_client import upload_head_img, connect_server, update_user_info
 from model_user import User
 from view_widget import Widget
 
@@ -28,7 +27,7 @@ class Ui_ViewUserInfo(Widget):
         self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setGeometry(QtCore.QRect(250, 40, 61, 61))
         if self.user.img == "" or self.user.img is None:
-            self.pushButton.setStyleSheet("border:none;border-image: url(res/main/椭圆 1.png);")
+            self.pushButton.setStyleSheet("border:none;border-image: url(res/client_head_image/logo.png);")
         else:
             self.pushButton.setStyleSheet("border:none;border-image: url(res/client_head_image/%s);"%self.user.img)
         self.pushButton.setText("")
@@ -66,6 +65,10 @@ class Ui_ViewUserInfo(Widget):
         self.comboBox.setObjectName("comboBox")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        if self.user.sex=="m" or self.user.sex =="" or self.user.sex == None:
+            self.comboBox.setCurrentIndex(0)
+        else:
+            self.comboBox.setCurrentIndex(1)
 
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
@@ -80,8 +83,7 @@ class Ui_ViewUserInfo(Widget):
             return
         self.user.img = fileName_choose.split("/")[-1]
         self.filepath = fileName_choose
-        print(self.user.img)
-        print(self.filepath)
+        self.pushButton.setStyleSheet("border:none;border-image: url(/%s);" % self.filepath)
 
     def update_info(self):
         sex = self.comboBox.currentText()
@@ -89,7 +91,16 @@ class Ui_ViewUserInfo(Widget):
             self.user.sex = "m"
         else:
             self.user.sex = "w"
+        if self.user.img == "" or self.user.img is None:
+            self.filepath="res/client_head_image/logo.png"
+            self.user.img = "logo.png"
+        if self.filepath =="":
+            self.filepath = "res/client_head_image/logo.png"
+        self.user.nickname = self.lineEdit.text()
         upload_head_img(self.filepath,self.user.img)
+        time.sleep(0.5)
+        update_user_info(self.user.account_id,self.user.img,self.user.nickname,self.user.sex)
+        self.close()
 
     def retranslateUi(self, UserInfoView):
         _translate = QtCore.QCoreApplication.translate
@@ -105,7 +116,7 @@ class Ui_ViewUserInfo(Widget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     connect_server()
-    user= User(aaccount_id="admin",nickname="彭琦",img="admin.jpg")
+    user= User(aaccount_id="admin",nickname="彭琦",img="",sex="w")
     login = Ui_ViewUserInfo(user)
     login.show()
     sys.exit(app.exec_())

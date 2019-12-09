@@ -32,14 +32,14 @@ class Ui_ViewFriendItem(QWidget):
         self.label_head_img = QtWidgets.QPushButton(self)
         self.label_head_img.setGeometry(QtCore.QRect(10, 15, 40, 40))
         if self.user_friend.img == None or self.user_friend.img == "":
-            self.label_head_img.setStyleSheet("border-image: url(res/client_head_image/椭圆 1 拷贝.png);")
+            self.label_head_img.setStyleSheet("border-image: url(res/client_head_image/logo.png);")
         else:
             is_exist = os.path.exists("res/client_head_image/%s" % self.user_friend.img)
             if is_exist == True:
                 pass
             else:
                 download_head_img_by_account(self.user_friend.img)
-            self.label_head_img.setStyleSheet("border-image: url(/home/tarena/project/res/client_head_image/%s);" % self.user_friend.img)
+            self.label_head_img.setStyleSheet("border-image: url(res/client_head_image/%s);" % self.user_friend.img)
         self.label_head_img.setText("")
         self.label_head_img.setObjectName("label_head_img")
         # 昵称框
@@ -47,9 +47,9 @@ class Ui_ViewFriendItem(QWidget):
         self.label_nickname.setGeometry(QtCore.QRect(60, 18, 211, 17))
         self.label_nickname.setObjectName("label_nickname")
         # 设置消息提醒动图
-        self.gif = QMovie("res/login/dongtu.gif")
+        self.gif = QMovie("res/main/红点.gif")
         self.lable_message = QLabel(self)
-        self.lable_message.setGeometry(10, 15, 20, 20)
+        self.lable_message.setGeometry(40, 13, 20, 20)
         self.lable_message.setMovie(self.gif)
         self.gif.start()
         self.lable_message.hide()

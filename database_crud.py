@@ -98,27 +98,23 @@ class DataBaseCRUD:
             return True
 
     # 需要修改
-    def update_user_info(self, account, user):
+    def update_user_info(self,account_id, img, nickname, sex):
         """
         更新用户信息
         :param account: 用户账号
         :param user:
         :return: 成功/失败
         """
-        # sql = """update user_table set
-        #       account_id=%s, nickname=%s, password=%s, sex=%s, img=%s,
-        #       offline_message=%s, answer1=%s, answer2=%s, answer3=%s where account_id=%s"""
-        # arg_list = [account, name, passwd, sex, img, offline_message,
-        #             answer1, answer2, answer3, account]
-        #
-        # try:
-        #     self.cur.execute(sql, arg_list)
-        #     self.db.commit()
-        # except Exception:
-        #     self.db.rollback()
-        #     return False
-        # else:
-        #     return True
+        sql = "update user_table set nickname=%s,sex=%s,img = %s where account_id=%s;"
+        arg_list = [nickname,sex,img,account_id]
+        try:
+            self.cur.execute(sql, arg_list)
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            return False
+        else:
+            return True
 
     def find_pid_by_account(self, account):
         """
