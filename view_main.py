@@ -3,11 +3,13 @@ import threading
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QMovie
+from PyQt5.QtWidgets import QApplication, QLabel
 
 from TCP_client import *
 from model_user import User
 from view_friend_list import ViewFriendList
+from view_search import Ui_SearchView
 from view_user_info import Ui_ViewUserInfo
 from view_widget import Widget
 from multiprocessing import Process
@@ -19,6 +21,7 @@ class Ui_ViewMain(Widget):
     flush_msg = pyqtSignal(object)
     recv_chat_msg = pyqtSignal(object)
     recv_chat_img = pyqtSignal(object)
+    search_nickname_signal = pyqtSignal(object)
 
     def __init__(self, account,sockfd):
         super().__init__()
@@ -27,6 +30,7 @@ class Ui_ViewMain(Widget):
         self.user = find_all_info_by_account(account)
         self.friend_list = find_all_friends(account)
         self.user_info_window = Ui_ViewUserInfo(self.user)
+        self.search_window = Ui_SearchView(account)
         self.setupUi()
 
     def setupUi(self):
@@ -139,6 +143,15 @@ class Ui_ViewMain(Widget):
         self.pushButton_add.setStyleSheet("background-image: url(res/main/按钮.png);")
         self.pushButton_add.setText("")
         self.pushButton_add.setObjectName("pushButton_add")
+        self.pushButton_add.clicked.connect(self.open_search_window)
+        self.gif = QMovie("res/main/红点.gif")
+        self.lable_message = QLabel(self.frame_2)
+        self.lable_message.move(256, 103)
+        self.lable_message.setMovie(self.gif)
+        self.gif.start()
+        # self.gif.stop()
+        self.lable_message.hide()
+
 
         # 天气显示
         self.label_weather = QtWidgets.QLabel(self.frame_2)
@@ -174,6 +187,7 @@ class Ui_ViewMain(Widget):
         self.flush_msg.connect(self.friends.singla_flush)
         self.recv_chat_msg.connect(self.friends.singla_recv_chat_message)
         self.recv_chat_img.connect(self.friends.singla_recv_chat_image)
+        self.search_nickname_signal.connect(self.search_window.show_result)
 
         self.thread = threading.Thread(target=self.recv_message)
         self.thread.setDaemon(True)
@@ -181,6 +195,10 @@ class Ui_ViewMain(Widget):
         # self.process = Process(target=self.recv_message)
         # self.process.daemon = True
         # self.process.start()
+
+    def open_search_window(self):
+        self.search_window.show()
+        self.lable_message.hide()
 
     def open_info_window(self):
         self.user_info_window.show()
@@ -201,7 +219,21 @@ class Ui_ViewMain(Widget):
                 data = self.do_send_chat_img(data, list_data)
             elif list_data[0] == "FLUSH_USER_INFO":
                 self.do_flush_user_info()
+            elif list_data[0] == "SEARCH_USER":
+                self.search_nickname = list_data[1]
+                self.search_result(self.search_nickname)
+            elif list_data[0] == "REQUEST_ADD_FRIEND":
+                request_add_account = list_data[1]
+                self.search_window.label.setText("%s请求添加好友"%request_add_account)
+                self.search_window.pushButton_ignore.show()
+                self.search_window.pushButton_agree.show()
+                self.search_window.search_account = request_add_account
+                self.lable_message.show()
+            elif list_data[0] == "FLUSH_FRIEND_LIST":
+                self.do_friend_online(list_data)
 
+    def search_result(self,msg):
+        self.search_nickname_signal.emit(msg)
 
     def do_flush_user_info(self):
         self.user = find_all_info_by_account(self.user.account_id)

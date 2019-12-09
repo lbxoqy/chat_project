@@ -64,6 +64,17 @@ def find_all_info_by_account(account):
     user.__dict__ = dict_user
     return user
 
+def search_user(account):
+    message = "SEARCH_USER %s" % account
+    sockfd.send(message.encode())  # 发送字节串
+
+def add_friend(self_account,friend_account):
+    message = "ADD_FRIEND %s %s" % (self_account,friend_account)
+    sockfd.send(message.encode())  # 发送字节串
+
+def agree_add_friend(self_account,friend_account):
+    message = "AGREE_ADD_FRIEND %s %s" % (self_account, friend_account)
+    sockfd.send(message.encode())  # 发送字节串
 
 def download_head_img_by_account(img):
     """

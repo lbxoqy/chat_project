@@ -141,8 +141,10 @@ class DataBaseCRUD:
         f_id = self.find_pid_by_account(friend_acc)
 
         sql = "insert into user_friend_table values(%s, %s);"
+        sql2 = "insert into user_friend_table values(%s, %s);"
         try:
             self.cur.execute(sql, (u_id, f_id))
+            self.cur.execute(sql, (f_id, u_id))
             self.db.commit()
         except Exception:
             self.db.rollback()

@@ -24,7 +24,8 @@ insert into user_table(pid,account_id,nickname,password,sex) values(100003,'admi
 insert into user_table(pid,account_id,nickname,password,sex) values(100004,'admin4','管理员','admin','m');
 insert into user_table(pid,account_id,nickname,password,sex) values(100005,'admin5','管理员','admin','m');
 insert into user_table(account_id,nickname,password) values('admin6','管理员','admin');
-
+update user_table set password=123456 where account_id='pengqi333';
+update user_table set nickname=123456,sex='w',img = 'admin.jpg' where account_id='pengqi333';
 select * from user_table;
 update user_table set online_status=0 where account_id='admin4';
 

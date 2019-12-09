@@ -32,21 +32,22 @@ class ViewLogin(Widget):
         # 设置右上角X
         self.close_button = QPushButton(self)
         self.close_button.setStyleSheet(
-            "QPushButton{background-image: url(res/login/关闭悬浮.png)} QPushButton{border:none;}")
+            "QPushButton{border-image: url(res/login/guanbi.png)} QPushButton{border:none;}")
         self.close_button.setGeometry(616, 0, 34, 34)
         self.close_button.pressed.connect(self.close)
         # 设置最小化窗口
         self.min_button = QPushButton(self)
         self.min_button.setStyleSheet(
-            "QPushButton{background-image: url(res/login/最小化悬浮.png)} QPushButton{border:none;}")
+            "QPushButton{background-image: url(res/login/最小化.png)} QPushButton{border:none;}")
         self.min_button.setGeometry(582, 0, 34, 34)
         self.min_button.pressed.connect(self.showMinimized)
         # 设置头像动图
-        self.gif = QMovie("res/login/dongtu.gif")
+        # self.gif = QMovie("res/login/dongtu.gif")
         self.lable = QLabel(self)
         self.lable.setGeometry(444, 46, 88, 88)
-        self.lable.setMovie(self.gif)
-        self.gif.start()
+        self.lable.setStyleSheet("border-image: url(res/main/logo.png)")
+        # self.lable.setMovie(self.gif)
+        # self.gif.start()
         # 设置用户名图标
         self.user_name_botton = PyqtTools.set_button(self, "res/login/用户名.png", 16, 16, 360, 166)
         self.passwd_botton = PyqtTools.set_button(self, "res/login/密码.png", 16, 16, 359, 210)
@@ -80,7 +81,7 @@ class ViewLogin(Widget):
         # 设置左边蓝色框
         self.left_button = QLabel(self)
         self.left_button.setStyleSheet(
-            "background-image: url(res/login/矩形 1 拷贝.png)")
+            "background-image: url(res/login/组 3.png)")
         self.left_button.setGeometry(0, 0, 325, 350)
 
         # 设置按钮的事件
@@ -137,14 +138,14 @@ class ViewLogin(Widget):
                     "QPushButton{background-image: url(res/login/关闭点击.png)} QPushButton{border:none;}")
             if event.type() == QEvent.Leave:
                 self.close_button.setStyleSheet(
-                    "QPushButton{background-image: url(res/login/关闭悬浮.png)} QPushButton{border:none;}")
+                    "QPushButton{background-image: url(res/login/guanbi.png)} QPushButton{border:none;}")
         if object == self.min_button:
             if event.type() == QEvent.Enter:
                 self.min_button.setStyleSheet(
                     "QPushButton{background-image: url(res/login/最小化点击.png)} QPushButton{border:none;}")
             if event.type() == QEvent.Leave:
                 self.min_button.setStyleSheet(
-                    "QPushButton{background-image: url(res/login/最小化悬浮.png)} QPushButton{border:none;}")
+                    "QPushButton{background-image: url(res/login/最小化.png)} QPushButton{border:none;}")
         if object == self.login_button:
             if event.type() == QEvent.Enter:
                 self.login_button.setStyleSheet(

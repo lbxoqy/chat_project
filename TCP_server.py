@@ -163,28 +163,62 @@ def handle(connfd):
                 find_all_friend(connfd, list_data)
             elif list_data[0] == "EXIT":  # list_data = ["EXIT","account"]
                 do_exit(list_data)
-            elif list_data[
-                0] == "SEND_CHAT":  # list_data = ['SEND_CHAT', 'admin admin1 李行 2019-12-02-13:09:28: 111111']
+            elif list_data[0] == "SEND_CHAT":  # list_data = ['SEND_CHAT', 'admin admin1 李行 2019-12-02-13:09:28: 111111']
                 send_chat(list_data)
             elif list_data[0] == "SEND_IMG":  # list_data = ['SEND_IMG', 'file_name size recv_account send_account']
                 send_img(connfd, list_data)
             elif list_data[0] == "UPLOAD_HEAD_IMG":
                 upload_head_img(connfd, list_data)
             elif list_data[0] == "UPDATE_USER_INFO":
-                info_list = list_data[1].split(" ",3)
-                account = info_list[0]
-                img = info_list[1]
-                nickname = info_list[2]
-                sex = info_list[3]
-                result = db.update_user_info(account,img,nickname,sex)
+                update_user_info(list_data)
+            elif list_data[0] == "SEARCH_USER":
+                search_user(connfd, list_data)
+            elif list_data[0] == "ADD_FRIEND":
+                list_account = list_data[1].split(" ",1)
+                self_account = list_account[0]
+                friend_account = list_account[1]
                 for acco, connfd1 in online_user_connfd_dict.items():
-                    message = "FLUSH_USER_INFO %s"
+                    if acco == friend_account:
+                        message = "REQUEST_ADD_FRIEND %s" % self_account
+                        connfd1.send(message.encode())
+            elif list_data[0] == "AGREE_ADD_FRIEND":
+                list_account = list_data[1].split(" ", 1)
+                self_account = list_account[0]
+                friend_account = list_account[1]
+                db.add_friend(self_account,friend_account)
+                for acco, connfd1 in online_user_connfd_dict.items():
+                    message = "FLUSH_FRIEND_LIST "
                     connfd1.send(message.encode())
                     sleep(0.2)
 
 
         except:
             print("接收消息出错")
+
+
+def search_user(connfd, list_data):
+    account = list_data[1]
+    user = db.find_all_info_by_account(account)
+    message = "SEARCH_USER "
+    if user == False:
+        message += "NO"
+        connfd.send(message.encode())
+    else:
+        message += user.nickname
+        connfd.send(message.encode())
+
+
+def update_user_info(list_data):
+    info_list = list_data[1].split(" ", 3)
+    account = info_list[0]
+    img = info_list[1]
+    nickname = info_list[2]
+    sex = info_list[3]
+    result = db.update_user_info(account, img, nickname, sex)
+    for acco, connfd1 in online_user_connfd_dict.items():
+        message = "FLUSH_USER_INFO %s"
+        connfd1.send(message.encode())
+        sleep(0.2)
 
 
 def upload_head_img(connfd, list_data):
