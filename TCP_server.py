@@ -44,27 +44,23 @@ def do_login(connfd, list_data):  # list_data = ["LOGIN","account passwd"]
     account_passwd = list_data[1].split(" ")
     account = account_passwd[0]
     passwd = account_passwd[1]
-    if account in online_user_list:
+    re = db.find_passwd_by_account(account)
+    result = False
+    if re == passwd:
+        result = True
+    if result == True:
+        msg = "LOGIN_OK"
+        connfd.send(msg.encode())
+        online_user_list.append(account)
+        for acco, connfd1 in online_user_connfd_dict.items():
+            message = "FRIEND_ONLINE %s" % account
+            connfd1.send(message.encode())
+            sleep(0.3)
+        online_user_connfd_dict[account] = connfd
+
+    else:
         msg = "LOGIN_FAILED"
         connfd.send(msg.encode())
-    else:
-        re = db.find_passwd_by_account(account)
-        result = False
-        if re == passwd:
-            result = True
-        if result == True:
-            msg = "LOGIN_OK"
-            connfd.send(msg.encode())
-            online_user_list.append(account)
-            for acco, connfd1 in online_user_connfd_dict.items():
-                message = "FRIEND_ONLINE %s" % account
-                connfd1.send(message.encode())
-                sleep(0.3)
-            online_user_connfd_dict[account] = connfd
-
-        else:
-            msg = "LOGIN_FAILED"
-            connfd.send(msg.encode())
 
 
 def download_img(connfd, list_data):
