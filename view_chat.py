@@ -10,7 +10,7 @@ import time
 
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, QTimer
+from PyQt5.QtCore import QSize, QTimer, pyqtSignal, Qt
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import *
 
@@ -117,10 +117,12 @@ class Ui_ViewChat(Widget):
         self.pushButton_7.setText("")
         self.pushButton_7.setObjectName("pushButton_7")
         self.pushButton_7.clicked.connect(self.show_history)
-        self.textEdit = QtWidgets.QTextEdit(self.frame_3)
+        self.textEdit =QTextEdit(self.frame_3)
         self.textEdit.setGeometry(QtCore.QRect(5, 42, 700, 105))
         self.textEdit.setStyleSheet("border:none;background-color: rgb(255, 255, 255);")
         self.textEdit.setObjectName("textEdit")
+        
+        
         self.pushButton_8 = QtWidgets.QPushButton(self.frame_3)
         self.pushButton_8.setGeometry(QtCore.QRect(705, 42, 95, 105))
         self.pushButton_8.setStyleSheet("border:none;font: 57 italic 11pt \"Ubuntu\";font: 20pt \"Ubuntu\";background-color: rgb(242, 243, 243);")
@@ -129,6 +131,7 @@ class Ui_ViewChat(Widget):
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
         self.flush_message_list()
+
 
     def singla_flush_chat(self, msg):
         if msg == "FLUSH_CHAT":
@@ -318,6 +321,8 @@ class Ui_ViewChat(Widget):
     def keyPressEvent(self, event):
         if event.key() == 16777220 or event.key() == 16777221:
             self.send_chat()
+
+        
 
 
 if __name__ == '__main__':
