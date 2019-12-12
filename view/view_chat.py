@@ -9,13 +9,13 @@ import sys
 import time
 
 from PIL import Image
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, QTimer, pyqtSignal, Qt
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import *
 
-from TCP_client import send_chat, find_all_friends, send_img
-from view_widget import Widget
+from TCP_client import send_chat, send_img
+from view.view_widget import Widget
 from model_user import User
 
 
@@ -216,6 +216,7 @@ class Ui_ViewChat(Widget):
                 self.listWidget.setItemWidget(item, widget)
                 self.listWidget.setCurrentRow(self.listWidget.count() - 1)
             except:
+                filepath = ""
                 print("图片打开失败")
 
     def send_expression(self):

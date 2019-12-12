@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import QApplication, QLabel
 
 from TCP_client import *
 from model_user import User
-from view_friend_list import ViewFriendList
-from view_search import Ui_SearchView
-from view_user_info import Ui_ViewUserInfo
-from view_widget import Widget
-from multiprocessing import Process
+from view.view_friend_list import ViewFriendList
+from view.view_search import Ui_SearchView
+from view.view_user_info import Ui_ViewUserInfo
+from view.view_widget import Widget
+
 
 class Ui_ViewMain(Widget):
     """

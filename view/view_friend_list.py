@@ -2,12 +2,12 @@ import json
 import sys
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import QSize, pyqtSignal
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import *
 
-from TCP_client import find_all_friends, connect_server, find_all_info_by_account
+from TCP_client import connect_server, find_all_info_by_account
 from model_user import User
-from view_friend_item import Ui_ViewFriendItem
+from view.view_friend_item import Ui_ViewFriendItem
 
 
 class ViewFriendList(QWidget):

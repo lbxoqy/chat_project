@@ -1,12 +1,12 @@
 import time
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QFileDialog
 import sys
 
 from TCP_client import upload_head_img, connect_server, update_user_info
 from model_user import User
-from view_widget import Widget
+from view.view_widget import Widget
 
 
 class Ui_ViewUserInfo(Widget):

@@ -5,9 +5,8 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import *
-from model_user import User
 from TCP_client import download_head_img_by_account, find_all_info_by_account, connect_server
-from view_chat import Ui_ViewChat
+from view.view_chat import Ui_ViewChat
 
 
 class Ui_ViewFriendItem(QWidget):

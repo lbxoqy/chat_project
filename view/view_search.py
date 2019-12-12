@@ -1,10 +1,10 @@
 import sys
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication
 
-from TCP_client import find_all_info_by_account, search_user, add_friend, agree_add_friend
-from view_widget import Widget
+from TCP_client import search_user, add_friend, agree_add_friend
+from view.view_widget import Widget
 
 
 class Ui_SearchView(Widget):

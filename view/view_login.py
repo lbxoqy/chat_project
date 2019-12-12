@@ -3,17 +3,15 @@
 """
 import sys
 import webbrowser
-from multiprocessing import Process
 
 from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QLabel, QDesktopWidget, QApplication, QWidget
 
 from TCP_client import *
 from tools_pyqt import *
 # from view_main import Ui_ViewMain
-from view_main import Ui_ViewMain
-from view_widget import Widget
+from view.view_main import Ui_ViewMain
+from view.view_widget import Widget
 
 
 class ViewLogin(Widget):

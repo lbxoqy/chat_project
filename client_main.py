@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from TCP_client import connect_server
-from view_login import ViewLogin
+from view.view_login import ViewLogin
 
 if __name__ == '__main__':
     try:
