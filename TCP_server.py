@@ -293,6 +293,10 @@ def do_new_pwd():
     else:
         return render_template("refind_pwd_failed.html")
 
+@app.route("/download", methods=['GET'])
+def download():
+    # 需要知道2个参数, 第1个参数是本地目录的path, 第2个参数是文件名(带扩展名)
+    return send_from_directory("/home/tarena", "chat_project.zip", as_attachment=True)
 
 def main():
 

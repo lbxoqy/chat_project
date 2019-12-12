@@ -11,6 +11,7 @@ import time
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSize, QTimer
+from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import *
 
 from TCP_client import send_chat, find_all_friends, send_img
@@ -179,20 +180,35 @@ class Ui_ViewChat(Widget):
             self.listWidget.addItem(item)
             self.listWidget.setItemWidget(item, label)
             try:
-                img = Image.open(filepath)
-                imgSize = img.size  # 图片的长和宽
-                while True:
+                if filepath.split(".")[-1]=="gif":
+                    img = Image.open(filepath)
+                    imgSize = img.size  # 图片的长和宽
                     x = imgSize[0] // 2
                     y = imgSize[1] // 2
-                    imgSize = (x, y)
-                    if y < 200:
-                        break
-                item = QListWidgetItem()
-                item.setSizeHint(QSize(x, y))
-                widget = QWidget()
-                label = QtWidgets.QLabel(widget)
-                label.setGeometry(0, 0, x, y)
-                label.setStyleSheet("border-image: url(%s);" % filepath)
+                    item = QListWidgetItem()
+                    item.setSizeHint(QSize(x, y))
+                    widget = QWidget()
+                    label = QtWidgets.QLabel(widget)
+                    label.setGeometry(0, 0, x, y)
+                    gif = QMovie(filepath)
+                    gif.setScaledSize(QSize(100,100))
+                    label.setMovie(gif)
+                    gif.start()
+                else:
+                    img = Image.open(filepath)
+                    imgSize = img.size  # 图片的长和宽
+                    while True:
+                        x = imgSize[0] // 2
+                        y = imgSize[1] // 2
+                        imgSize = (x, y)
+                        if y < 200:
+                            break
+                    item = QListWidgetItem()
+                    item.setSizeHint(QSize(x, y))
+                    widget = QWidget()
+                    label = QtWidgets.QLabel(widget)
+                    label.setGeometry(0, 0, x, y)
+                    label.setStyleSheet("border-image: url(%s);" % filepath)
                 self.listWidget.addItem(item)
                 self.listWidget.setItemWidget(item, widget)
                 self.listWidget.setCurrentRow(self.listWidget.count() - 1)
@@ -205,7 +221,7 @@ class Ui_ViewChat(Widget):
         fileName_choose, filetype = QFileDialog.getOpenFileName(self,
                                                                 "选取文件",
                                                                 "/home/tarena/",  # 起始路径
-                                                                "All Files(*.jpg)")  # 设置文件扩展名过滤,用双分号间隔
+                                                                "All Files(*.jpg *.gif *.jpeg)")  # 设置文件扩展名过滤,用双分号间隔
         if fileName_choose == "":
             print("\n取消选择")
             return
@@ -235,21 +251,38 @@ class Ui_ViewChat(Widget):
             label.setStyleSheet("color: rgb(245, 121, 0);")
             self.listWidget.addItem(item)
             self.listWidget.setItemWidget(item, label)
+            if self.img_path.split(".")[-1]=="gif":
+                img = Image.open(self.img_path)
+                imgSize = img.size  # 图片的长和宽
+                x = imgSize[0] // 2
+                y = imgSize[1] // 2
 
-            img = Image.open(self.img_path)
-            imgSize = img.size  # 图片的长和宽
-            while True:
-                x = imgSize[0]//2
-                y = imgSize[1]//2
-                imgSize = (x,y)
-                if y < 200:
-                    break
-            item = QListWidgetItem()
-            item.setSizeHint(QSize(x, y))
-            widget = QWidget()
-            label = QtWidgets.QLabel(widget)
-            label.setGeometry(0, 0, x,y)
-            label.setStyleSheet("border-image: url(%s);" % self.img_path)
+
+                item = QListWidgetItem()
+                item.setSizeHint(QSize(x, y))
+                widget = QWidget()
+                label = QtWidgets.QLabel(widget)
+                label.setGeometry(0, 0, x, y)
+                gif = QMovie(self.img_path)
+                gif.setScaledSize(QSize(100, 100))
+                label.setMovie(gif)
+                gif.start()
+            else:
+
+                img = Image.open(self.img_path)
+                imgSize = img.size  # 图片的长和宽
+                while True:
+                    x = imgSize[0]//2
+                    y = imgSize[1]//2
+                    imgSize = (x,y)
+                    if y < 200:
+                        break
+                item = QListWidgetItem()
+                item.setSizeHint(QSize(x, y))
+                widget = QWidget()
+                label = QtWidgets.QLabel(widget)
+                label.setGeometry(0, 0, x,y)
+                label.setStyleSheet("border-image: url(%s);" % self.img_path)
             self.listWidget.addItem(item)
             self.listWidget.setItemWidget(item, widget)
             send_img(self.user.account_id,self.user_friend.account_id,self.img_path)
